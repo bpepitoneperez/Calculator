@@ -7,8 +7,11 @@ let firstNumChoice = true;
 let double = false;
 let firstDouble = false;
 let secondDouble = false;
+let equalsPressed = false;
 
 const result = document.querySelector('#results');
+
+const allOps = document.querySelectorAll('.ops');
 
 const buttons = document.querySelectorAll("button");
 buttons.forEach(function(button) {
@@ -25,6 +28,15 @@ buttons.forEach(function(button) {
     });
     button.addEventListener('mouseup', function() {
         if (button.className == 'nums') {
+            allOps.forEach(function(op) {
+                op.style.backgroundColor = 'orange';
+                op.style.color = 'white';
+            });
+            if (equalsPressed) {
+                secondDouble = false;
+                secondNumString = "";
+                equalsPressed = false;
+            }
             button.style.backgroundColor = 'rgb(88, 88, 88)';
             if (firstNumChoice) {
                 if (button.textContent == ".") {
@@ -57,8 +69,16 @@ buttons.forEach(function(button) {
         }
         else if (button.className == 'ops') {
             firstNumChoice = false;
-            button.style.backgroundColor = 'white';
-            button.style.color = 'orange';
+            if (button.id != 'equals') {
+                button.style.backgroundColor = 'white';
+                button.style.color = 'orange';
+            }
+            allOps.forEach(function(op) {
+                if (op.id != button.id) {
+                    op.style.backgroundColor = 'orange';
+                    op.style.color = 'white';
+                }
+            });
             if (button.id == 'add') {
                 currOperator = button.id;
             }
@@ -72,10 +92,14 @@ buttons.forEach(function(button) {
                 currOperator = button.id;
             }
             else if (button.id == 'equals') {
-                if (firstNumString == "") {
+                allOps.forEach(function(op) {
+                    op.style.backgroundColor = 'orange';
+                    op.style.color = 'white';
+                });
+                if (firstNumString == "" || firstNumString == ".") {
                     firstNumString += 0;
                 }
-                if (secondNumString == "") {
+                if (secondNumString == "" || secondNumString == ".") {
                     secondNumString += 0;
                 }
                 if (double) {
@@ -97,42 +121,62 @@ buttons.forEach(function(button) {
             else if (button.id == 'negative') {
                 let tempNum = 0;
                 if (firstNumChoice) {
-                    if (double) {
-                        tempNum = parseFloat(firstNumString);
+                    if (firstNumString == "") {
+                        
                     }
                     else {
-                        tempNum = parseInt(firstNumString);
+                        if (double) {
+                            tempNum = parseFloat(firstNumString);
+                        }
+                        else {
+                            tempNum = parseInt(firstNumString);
+                        }
+                        tempNum *= -1;
+                        firstNumString = tempNum;
+                        result.textContent = tempNum;
                     }
-                    tempNum *= -1;
-                    firstNumString = tempNum;
-                    result.textContent = tempNum;
                 }
                 else {
-                    if (double) {
-                        tempNum = parseFloat(secondNumString);
+                    if (secondNumString == "") {
+                        
                     }
                     else {
-                        tempNum = parseInt(secondNumString);
+                        if (double) {
+                            tempNum = parseFloat(secondNumString);
+                        }
+                        else {
+                            tempNum = parseInt(secondNumString);
+                        }
+                        tempNum *= -1;
+                        secondNumString = tempNum;
+                        result.textContent = tempNum;
                     }
-                    tempNum *= -1;
-                    secondNumString = tempNum;
-                    result.textContent = tempNum;
                 }
             }
             else if (button.id == 'percent') {
                 if (firstNumChoice) {
-                    let tempNum = parseFloat(firstNumString);
-                    tempNum = tempNum / 100;
-                    firstNumString = tempNum;
-                    result.textContent = tempNum;
-                    double = true;
+                    if (firstNumString == "") {
+                        
+                    }
+                    else {
+                        let tempNum = parseFloat(firstNumString);
+                        tempNum = tempNum / 100;
+                        firstNumString = tempNum;
+                        result.textContent = tempNum;
+                        double = true;
+                    }
                 }
                 else {
-                    let tempNum = parseFloat(secondNumString);
-                    tempNum = tempNum / 100;
-                    secondNumString = tempNum;
-                    result.textContent = tempNum;
-                    double = true;
+                    if (secondNumString == "") {
+                        
+                    }
+                    else {
+                        let tempNum = parseFloat(secondNumString);
+                        tempNum = tempNum / 100;
+                        secondNumString = tempNum;
+                        result.textContent = tempNum;
+                        double = true;
+                    }
                 }
             }
         }
@@ -179,8 +223,7 @@ function operate(op, a, b) {
         result.textContent = temp;
         firstNumString = temp;
     }
-    secondDouble = false;
-    secondNumString = "";
+    equalsPressed = true;
 }
 
 function clear() {
@@ -194,6 +237,10 @@ function clear() {
     firstDouble = false;
     secondDouble = false;
     result.textContent = 0;
+    allOps.forEach(function(op) {
+        op.style.backgroundColor = 'orange';
+        op.style.color = 'white';
+    });
 }
 
 //Need to fix decimal logic when it's inputted before a number
