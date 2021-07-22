@@ -166,6 +166,9 @@ buttons.forEach(function(button) {
         }
         else if (button.className == 'special') {
             button.style.backgroundColor = 'gainsboro';
+            if (equalsPressed) {
+                secondNumString = lastResult;
+            }
             if (button.id == 'clear') {
                 clear();
             }
@@ -185,6 +188,7 @@ buttons.forEach(function(button) {
                         tempNum *= -1;
                         firstNumString = tempNum;
                         result.textContent = tempNum;
+                        lastResult = tempNum;
                     }
                 }
                 else {
@@ -201,6 +205,7 @@ buttons.forEach(function(button) {
                         tempNum *= -1;
                         secondNumString = tempNum;
                         result.textContent = tempNum;
+                        lastResult = tempNum;
                     }
                 }
             }
@@ -214,6 +219,7 @@ buttons.forEach(function(button) {
                         tempNum = tempNum / 100;
                         firstNumString = tempNum;
                         result.textContent = tempNum;
+                        lastResult = tempNum;
                         double = true;
                     }
                 }
@@ -226,6 +232,7 @@ buttons.forEach(function(button) {
                         tempNum = tempNum / 100;
                         secondNumString = tempNum;
                         result.textContent = tempNum;
+                        lastResult = tempNum;
                         double = true;
                     }
                 }
