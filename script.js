@@ -8,8 +8,46 @@ let double = false;
 let firstDouble = false;
 let secondDouble = false;
 let equalsPressed = false;
+let lastInputFirst = [""];
+let lastInputSecond = [""];
+let inputPosFirst = 0;
+let inputPosSecond = 0;
+let lastResult = 0;
 
 const result = document.querySelector('#results');
+result.addEventListener('click', function() {
+    if (equalsPressed) {
+        result.textContent = lastResult;
+    }
+    else {
+        if (firstNumChoice) {
+            if (inputPosFirst > 0) {
+                inputPosFirst--;
+            }
+            firstNumString = lastInputFirst[inputPosFirst];
+            if (firstNumString == "") {
+                inputPosFirst = 0;
+                result.textContent = 0;
+            }
+            else {
+                result.textContent = firstNumString;
+            }
+        }
+        else {
+            if (inputPosSecond > 0) {
+                inputPosSecond--;
+            }
+            secondNumString = lastInputSecond[inputPosSecond];
+            if (secondNumString == "") {
+                inputPosSecond = 0;
+                result.textContent = 0;
+            }
+            else {
+                result.textContent = secondNumString;
+            }
+        }
+    }
+});
 
 const allOps = document.querySelectorAll('.ops');
 
@@ -33,12 +71,16 @@ buttons.forEach(function(button) {
                 op.style.color = 'white';
             });
             if (equalsPressed) {
-                secondDouble = false;
-                secondNumString = "";
                 equalsPressed = false;
+                inputPosFirst = 0;
+                inputPosSecond = 0;
+                firstNumChoice = true;
+                firstNumString = "";
             }
             button.style.backgroundColor = 'rgb(88, 88, 88)';
             if (firstNumChoice) {
+                lastInputFirst[inputPosFirst] = firstNumString;
+                inputPosFirst++;
                 if (button.textContent == ".") {
                     if (!firstDouble) {
                         firstNumString += button.textContent;
@@ -53,6 +95,8 @@ buttons.forEach(function(button) {
                 }
             }
             else {
+                lastInputSecond[inputPosSecond] = secondNumString;
+                inputPosSecond++;
                 if (button.textContent == ".") {
                     if (!secondDouble) {
                         secondNumString += button.textContent;
@@ -69,6 +113,13 @@ buttons.forEach(function(button) {
         }
         else if (button.className == 'ops') {
             firstNumChoice = false;
+            if (equalsPressed && button.id != 'equals') {
+                secondDouble = false;
+                secondNumString = "";
+                equalsPressed = false;
+                inputPosFirst = 0;
+                inputPosSecond = 0;
+            }
             if (button.id != 'equals') {
                 button.style.backgroundColor = 'white';
                 button.style.color = 'orange';
@@ -207,21 +258,25 @@ function operate(op, a, b) {
         let temp = add(a, b);
         result.textContent = temp;
         firstNumString = temp;
+        lastResult = temp;
     }
     else if (op == 'subtract') {
         let temp = subtract(a, b);
         result.textContent = temp;
         firstNumString = temp;
+        lastResult = temp;
     }
     else if (op == 'multiply') {
         let temp = multiply(a, b);
         result.textContent = temp;
         firstNumString = temp;
+        lastResult = temp;
     }
     else if (op == 'divide') {
         let temp = divide(a, b);
         result.textContent = temp;
         firstNumString = temp;
+        lastResult = temp;
     }
     equalsPressed = true;
 }
@@ -236,6 +291,11 @@ function clear() {
     double = false;
     firstDouble = false;
     secondDouble = false;
+    lastInputFirst = [""];
+    lastInputSecond = [""];
+    inputPosFirst = 0;
+    inputPosSecond = 0;
+    lastResult = 0;
     result.textContent = 0;
     allOps.forEach(function(op) {
         op.style.backgroundColor = 'orange';
